@@ -2,12 +2,7 @@
 title: "WILD 562 - Lab 3: Habitat Selection & Logistic Regression"
 author: "Mark Hebblewhite"
 date: "1/25/2021"
-output:
-  html_document:
-    number_sections: yes
-    theme: simplex
-    toc: yes
-    toc_float: yes
+output: github_document
 ---
 
 ```{r setup , include=FALSE}
@@ -117,9 +112,8 @@ write.table(wolfavail, file = "wolfavail.csv", row.names=FALSE, na="", col.names
 # Objective 2 - Exploring Merged Wolf USED and AVAIL datasets
 First read them back into active memory. 
 ```{r}
-wolfused <-read.csv("Data/wolfused.csv", header = TRUE)
-wolfavail <-read.csv("Data/wolfavail.csv", header = TRUE)
-
+wolfused <-read.csv(here::here("Data","wolfused.csv"), header = TRUE)
+wolfavail <-read.csv(here::here("Data","wolfavail.csv"), header = TRUE)
 wolfkde <- rbind(wolfused, wolfavail)
 str(wolfkde)
 table(wolfkde$used, wolfkde$pack)
