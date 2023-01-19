@@ -2,19 +2,12 @@
 title: 'WILD 562 Lab4 : Categorical Covariates'
 author: "Mark Hebblewhite"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-output:
-  html_document:
-    number_sections: yes
-    self_contained: yes
-    theme: simplex
-    toc: yes
-    toc_float: yes
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
 require(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-opts_knit$set(root.dir = "/Users/mark.hebblewhite/Box Sync/Teaching/UofMcourses/WILD562/Spring2021/Labs/lab4")
 r <- getOption("repos")
 r["CRAN"] <- "https://ftp.osuosl.org/pub/cran/"
 options(repos = r)
@@ -80,7 +73,7 @@ Wegmann, M., Leutner, B. & Dech, S. (2016) Remote Sensing and GIS for Ecologists
 
 ## Loading and Manipulating Landcover Data
 ```{r}
-landcover<-raster("Data/landcover/landcover")
+landcover<-raster(here::here("Data","landcover"))
 image(landcover, col=rainbow(16))
 landcover
 #str(landcover)
@@ -92,8 +85,8 @@ Note that this 'legend' is what we want to keep track of as we transform the dat
 landcover@crs@projargs
 extent(landcover)
 
-writeRaster(landcover, "Data/landcover16.tif", "GTiff", overwrite = TRUE)
-landcover16 <- raster("Data/landcover16.tif") # bringing it back in
+writeRaster(landcover, here::here("Data","landcover16.tif"), "GTiff", overwrite = TRUE)
+landcover16 <- raster(here::here("Data","landcover16.tif")) # bringing it back in
 res(landcover16)
 extent(landcover16)
 crs(landcover16)

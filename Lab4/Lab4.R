@@ -18,7 +18,7 @@ ipak(packages)
 #############################################################
 # Importing Landcover Map from an ArcGIS 
 ## Loading and Manipulating Landcover Data
-landcover<-raster("Data/landcover/landcover")
+landcover<-raster("Data/landcover")
 image(landcover, col=rainbow(16))
 landcover
 #str(landcover)
