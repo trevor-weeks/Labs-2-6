@@ -63,7 +63,7 @@ related to wolf occupancy.
 The R packages we will load up front today are:
 
 ```{r eval = TRUE, results = 'hide'}
-packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars")
+packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars", "dplyr")
 ```
 
 Using the wrapper package reviewed in Lab 1:
@@ -318,14 +318,14 @@ And in this paper:
 First we will do a bit of data management to extract just the basics we need from the wolf telemetry object, wolfyht.shp.  We will extract the X Y locations, define a new dataframe, add the XY coordinates, a projection and create a new SpatialPointsDataFrame file - a common set of steps that here is slightly unnecessary because we already have a spatial points data frame.  But useful to review especially for students creating a new spatialPointsDataFrame from say, an excel spreadsheet or data from GPS radiocollars. 
 
 ```{r warning=FALSE}
-rd.data<-wolfyht[wolfyht@data$Pack=="Red Deer",]
-x<-rd.data@data$EASTING
-y<-rd.data@data$NORTHING
+rd.data<-wolfyht[wolfyht$Pack=="Red Deer",]
+x<-rd.data$EASTING
+y<-rd.data$NORTHING
 xy<-cbind(x,y)
 class(xy)
-rd <- data.frame(as.character(rd.data@data$NAME))
+rd <- data.frame(as.character(rd.data$NAME))
 coordinates(rd) <- xy
-proj4string(rd) <-  CRS("+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+crs(rd) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
 class(rd)
 # Fit 99% mpc
@@ -335,6 +335,10 @@ table(rd.data$NAME)
 #42 60 69 70 81 82 84 
 #43 25  4 15  3  2  1  
 #looks like 4 of the wolves do not have enough locations
+
+rd.test <- st_drop_geometry(rd.data) %>% 
+  filter(!NAME %in% c("69","81","82","84"))
+
 
 #remove these individuals with too few of locations
 names(rd)<-"NAME"
@@ -406,14 +410,14 @@ image(hr95)
 Calculate 99% minimum convex polygon for individual wolves in Bow valley wolf pack repeating the same steps as above. 
 ```{r, warning= FALSE}
 #first convert the spatialpointsdataframe to spatial points object
-bv.data<-wolfyht[wolfyht@data$Pack=="Bow valley",]
-x<-bv.data@data$EASTING
-y<-bv.data@data$NORTHING
+bv.data<-wolfyht[wolfyht$Pack=="Bow valley",]
+x<-bv.data$EASTING
+y<-bv.data$NORTHING
 xy<-cbind(x,y)
 
-bv <- data.frame(as.character(bv.data@data$NAME))
+bv <- data.frame(as.character(bv.data$NAME))
 coordinates(bv) <- xy
-proj4string(bv) <-  CRS("+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+crs(bv) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
 # Fit 99% mpc
 cp.bow <- mcp(bv, percent=99)
@@ -475,13 +479,13 @@ image(hr95)
 ## Calculate 99% minimum convex polygon for both wolf packs
 ```{r}
 #first convert the spatialpointsdataframe to spatial points object
-x<-wolfyht@data$EASTING
-y<-wolfyht@data$NORTHING
+x<-wolfyht$EASTING
+y<-wolfyht$NORTHING
 xy<-cbind(x,y)
 
 all <- data.frame(as.character(wolfyht@data$Pack))
 coordinates(all) <- xy
-proj4string(all) <-  CRS("+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+crs(all) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
 # Fit 99% mpc
 cp.all <- mcp(all, percent=99)
