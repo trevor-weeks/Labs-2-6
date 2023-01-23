@@ -63,7 +63,7 @@ related to wolf occupancy.
 The R packages we will load up front today are:
 
 ```{r eval = TRUE, results = 'hide'}
-packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap")
+packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars")
 ```
 
 Using the wrapper package reviewed in Lab 1:
@@ -157,9 +157,9 @@ sheep_plot2
 
 Here we will go through some typical raster operations when creating a set of spatially consistent raster layers to make into a 'stack' of rasters, a raster stack or brick, to then intersect animal locations with. 
 
-First, we will use the fields for each of the Ungulate Habitat Suitability Index Models described in the associated readings from the ELC dataset.  We will then create a series of raster files, 'layers', for each species of winter ungulate in BNP using the `rasterize()` command.  Note that because this takes a very long time, I've already created them for you in the  folder. 
+First, we will use the fields for each of the Ungulate Habitat Suitability Index Models described in the associated readings from the ELC dataset.  We will then create a series of raster files, 'layers', for each species of winter ungulate in BNP using the `terra::rasterize()` command.  
 
-But the steps involved in creating these rasters below are key, and, good to review.  Remember, our goal is to create a consistent stack of rasters - a raster stack, or brick, of the same raster extent, resolution and projection for all subsequent analyses in R. 
+The steps involved in creating these rasters below are key, and, good to review.  Remember, our goal is to create a consistent stack of rasters - a raster stack, or brick, of the same raster extent, resolution and projection for all subsequent analyses in R. 
 
 1. Mask - we create a consistent raster MASK upon which to base all subsequent operations. This standardizes the extent, resolution and projection of the mask, and sets all values of the mask to be 0. 
 
@@ -170,54 +170,43 @@ But the steps involved in creating these rasters below are key, and, good to rev
 ```{r}
 # Create a mask raster to use as a template for converting shapefile data to rasters
 #create an empty raster
-mask.raster <- raster()
+mask.raster <- rast()
 
 #set extent (note that I customized this extent so it covered both elc_habitat and humanacess)
-extent(mask.raster) <- c(xmin=443680.6, xmax=650430.4, ymin=5618405, ymax=5789236) 	
+ext(mask.raster) <- c(xmin=443680.6, xmax=650430.4, ymin=5618405, ymax=5789236) 	
 
 #set the resolution to 30 m 
 res(mask.raster)<-30
 
 #match projection to elc_habitat shapefile
-projection(mask.raster)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+crs(mask.raster)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
 #set all values of mask.raster to zero
 mask.raster[]<-0
 ```
 
-NExt I illustrate, but do not evaluate R code to create rasters for DEER_W, MOOSE_W, ELK_W, SHEEP_W, GOAT_W, WOLF_W
-**Note for today's Lab 2 we have masked out these steps as they take a LONG time.**
+Next I use the terra::rasterize() to create rasters for DEER_W, MOOSE_W, ELK_W, SHEEP_W, GOAT_W, WOLF_W 
+
 ```{r, eval= FALSE}
-deer_w<-rasterize(elc_habitat, mask.raster, field="DEER_W")
-moose_w<-rasterize(elc_habitat, mask.raster, field="MOOSE_W")
-elk_w<-rasterize(elc_habitat, mask.raster, field="ELK_W")
-sheep_w<-rasterize(elc_habitat, mask.raster, field="SHEEP_W")
-goat_w<-rasterize(elc_habitat, mask.raster, field="GOAT_W")
-wolf_w<-rasterize(elc_habitat, mask.raster, field="WOLF_W")
+##This does not take as long as the raster() package and fasterize is no longer needed
+deer_w<-terra::rasterize(elc_habitat, mask.raster, field="DEER_W")
+moose_w<-terra::rasterize(elc_habitat, mask.raster, field="MOOSE_W")
+elk_w<-terra::rasterize(elc_habitat, mask.raster, field="ELK_W")
+sheep_w<-terra::rasterize(elc_habitat, mask.raster, field="SHEEP_W")
+goat_w<-terra::rasterize(elc_habitat, mask.raster, field="GOAT_W")
+wolf_w<-terra::rasterize(elc_habitat, mask.raster, field="WOLF_W")
 
-plot result
+#Alternative using Stars Package that I have not figured out yet - SMS
+#deer_w <- st_as_stars(elc_habitat, name = attr(elc_habitat, "DEER_W"))
+
+#plot result
 plot(wolf_w)
-```
-These take such a long time that developers have built a new R package, Fasterize, to speed up raster calculations like this. 
-
-#Fasterize
-```{r, eval = FALSE}
-library(fasterize)  
-deer_w <- fasterize(elc_habitat_sf, mask.raster, field = "DEER_W")
-moose_w <- fasterize(elc_habitat_sf, mask.raster, field = "MOOSE_W")
-elk_w <- fasterize(elc_habitat_sf, mask.raster, field = "ELK_W")
-sheep_w <- fasterize(elc_habitat_sf, mask.raster, field = "SHEEP_W")
-goat_w <- fasterize(elc_habitat_sf, mask.raster, field = "GOAT_W")
-wolf_w <- fasterize(elc_habitat_sf, mask.raster, field = "WOLF_W")
-# 
 ```
 
 Next, we need to align the previously developed rasters, elevation and distance to human access, with the raster.mask developed above to have the exact same extent, spatial resolution, projection, etc.  We do so using the resample() function from the raster package. 
 
-Learn more about resampling by typing `?resample` and here: 
-https://csaybar.github.io/blog/2018/12/05/resample/
+Learn more about resampling by typing `?terra::resample` 
 
-The figure especially from this Raster Resampling Website is OUTSTANDING at explaining resampling. 
 
 ```{r, eval = FALSE}
 #resample elevation and humanaccess to match mask.raster
@@ -225,29 +214,16 @@ elevation2<-resample(elevation, mask.raster, method="bilinear")
 disthumaccess2<-resample(disthumaccess, mask.raster, method="bilinear")
 ```
 
-Exporting raster layers you have worked on using the `writeRaster` command from the raster package like this (note again, we do not evaluate these here for time). 
+Exporting raster layers you have worked on using the `writeRaster` command from the terra package like this:
 ```{r, eval = FALSE}
 #write raster layers to file
-writeRaster(deer_w, "Output/deer_w2.tiff", "GTiff")
-writeRaster(moose_w, "Output/moose_w2.tiff", "GTiff")
-writeRaster(elk_w, "Output/elk_w2.tiff", "GTiff")
-writeRaster(sheep_w, "Output/sheep_w2.tiff", "GTiff")
-writeRaster(goat_w, "Output/goat_w2.tiff", "GTiff")
-writeRaster(wolf_w, "Output/wolf_w2.tiff", "GTiff")
-writeRaster(elevation2, "Output/Elevation2.tiff", "GTiff")
-writeRaster(disthumaccess2, "Output/DistFromHumanAccess2.tiff", "GTiff")
+writeRaster(deer_w, here::here("Lab2","Output", "deer_w2.tiff"), overwrite = TRUE)
 ```
 
-But to save time in today's lab we will just be using the rasters we created before the lab and re-loading them from our working directory. 
+For today's lab we will us elevation rasters we created before the lab and re-load them from our working directory. 
 ```{r}
-#re-read in new rasters
-deer_w<-raster("Data/deer_w2.tif")
-moose_w<-raster("Data/moose_w2.tif")
-elk_w<-raster("Data/elk_w2.tif")
-sheep_w<-raster("Data/sheep_w2.tif")
-goat_w<-raster("Data/goat_w2.tif")
-wolf_w<-raster("Data/wolf_w2.tif")#
-elevation2<-raster("Data/Elevation2.tif") #resampled
+#reading in elevation raster
+elevation2<-rast(here::here("Data","Elevation2.tif")) #resampled
 ```
 
 How can we zoom into just one area of a raster object? There are many reasons we might want to, and many ways. One easy way is to 
@@ -265,35 +241,32 @@ For now, I already created this raster layer because it took a LONG time on a de
 
 ```{r}
 #first create an empty raster
-dist.raster <- raster()
-
+dist.raster <- rast()
 #set extent 
-extent(dist.raster) <- extent(humanaccess)
+ext(dist.raster) <- ext(humanaccess)
 
 #set the resolution to 30 m (Note that this takes a very long time with a 30 m resolution-even on my machine)
 res(dist.raster)<-30
 
 #match projection to humanaccess shapefile
-projection(dist.raster)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+crs(dist.raster)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
 #set all values of dist.raster to zero
 dist.raster[]<-0
 ```
 
-Next, we need to 'rasterize` (or fasterize) the new human access layer, and set human features to 1 using the dist.raster feature within rasterize. Note again, for time we will not actually run these today. 
+Next, we need to 'rasterize` the new human access layer, and set human features to 1 using the dist.raster feature within rasterize. Note again, for time we will not actually run these today. 
 ```{r, eval = FALSE}
-human.raster<-rasterize(humanaccess, dist.raster, 1)
+human.raster<-terra::rasterize(humanaccess, dist.raster, 1)
 
 #calculate distance to human access- NOTE : DO NOT RUN THIS IT TAKES FOREVER; I ENDED UP DOING THIS CALCULATION JUST FOR THE POINTS
 accessdist <-system.time(distance(human.raster))
 
-#write raster to file
-writeRaster(accessdist, "Output/DistFromHumanAccess.tiff", "GTiff")
 ```
 
 Lets bring in the previously modeled distance to human layer. 
 ```{r}
-disthumanaccess2<-raster("Data/DistFromHumanAccess2.tif") 
+disthumanaccess2<-rast(here::here("Data","DistFromHumanAccess2.tif")) 
 plot(disthumanaccess2)
 ```
 
@@ -316,14 +289,15 @@ levels(humanaccess$SUM_CLASS)[5]<-"MODERATE"
 levels(humanaccess$SUM_CLASS)[6]<-"NIL"
 
 #create indicator variable for high or not high human access
-highaccess<-humanaccess[humanaccess@data$SUM_CLASS=="HIGH" | humanaccess@data$SUM_CLASS=="VERY HIGH", ]
+highaccess<-humanaccess[humanaccess$SUM_CLASS=="HIGH" | humanaccess$SUM_CLASS=="VERY HIGH", ]
 
-plot(humanaccess)
-plot(highaccess, col="red", add=TRUE)
+#use package tmap() to create simple plots
+humanaccess_plot <- tm_shape(humanaccess)+tm_sf()
+humanaccess_plot + tm_shape(highaccess) + tm_sf(col = "red") 
 ```
 Now you would go through and rasterize this following the steps above to make this a raster file. Note I already did this to save time - lets load the distance to high human access layer. 
 ```{r}
-disthighhumanaccess<-raster("Data/DistFromHighHumanAccess2.tif")
+disthighhumanaccess<-rast(here::here("Data","DistFromHighHumanAccess2.tif"))
 plot(disthighhumanaccess)
 ```
 
