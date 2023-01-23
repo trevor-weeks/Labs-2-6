@@ -63,7 +63,7 @@ related to wolf occupancy.
 The R packages we will load up front today are:
 
 ```{r eval = TRUE, results = 'hide'}
-packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "rgdal", "sp", "raster", "ggplot2","colorRamps","rgeos")
+packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap")
 ```
 
 Using the wrapper package reviewed in Lab 1:
@@ -96,23 +96,26 @@ and
 
 First we will read in shapefiles from the GISdata folder in your R project directory. 
 ```{r warning=FALSE}
-elc_habitat<-shapefile("Data/elc_habitat.shp")
-humanaccess<-shapefile("Data/humanacess.shp")
-plot(elc_habitat)
-plot(humanaccess)
-wolfyht<-shapefile("Data/wolfyht.shp")
+elc_habitat<-st_read(here::here("Data","elc_habitat.shp"))
+humanaccess<-st_read(here::here("Data","humanacess.shp"))
+plot(elc_habitat) ## not sure if you want to keep this in here to show what base plot would do??
+tmap_mode("plot") 
+tm_shape(elc_habitat) + tm_sf()
+tm_shape(humanaccess) + tm_sf()
+
+wolfyht<-st_read(here::here("Data","wolfyht.shp"))
 head(wolfyht)
 ```
 
 As a preliminary step, lets plot some of the wolfyht using the base plot function, and using some of the structure of the wolfyht object. Lets remind ourselves of the structure of the SpatialPointsDataFrame first. 
 ```{r message=FALSE}
 class(wolfyht)
-wolfyht@proj4string # note this is a UTM projected map system. 
+crs(wolfyht,proj = TRUE) # note this is a UTM projected map system. 
 str(wolfyht)
 # Note that there are two fields, Easting and Northing which are the X and Y coordinates in UTM zone 11.  We will use these to map it for each PackID
 # base plot of wolf packs by color with legend
-plot(wolfyht@data$EASTING,wolfyht@data$NORTHING, col=c("red","blue")[wolfyht@data$PackID],ylab="Northing",xlab="Easting")
-legend(555000,5742500,unique(wolfyht@data$Pack),col=c("blue","red"),pch=1)
+base::plot(wolfyht$EASTING,wolfyht$NORTHING,col=c("red","blue")[wolfyht$PackID],ylab="Northing",xlab="Easting")
+legend(555000,5742500,unique(wolfyht$Pack),col=c("blue","red"),pch=1) 
 ```
 
 ## Habitat Suitability Index Models
@@ -125,14 +128,14 @@ Holroyd, G. L., and K. J. Van Tighem, editors. 1983. Ecological (biophysical) la
 Briefly, habitat suitability index models were developed by Holroyd and Van Tighem for Banff National Park using a variety of datasets, aerial surveys, pellet counts, and expert opinion. ELC polygons were ranked in order from low (0) to high (6), with lakes and water bodies classified as 7.  I will cover H.S.I. models, why you might want to build one, and how using an example for Bison in Banff later this semester. For now, lets continue. 
 
 ```{r warning=FALSE}
-elc_habitat@data$id <- rownames(elc_habitat@data)
-elc_habitatBuff <- gBuffer(elc_habitat, byid = T, width = 0)
-elc_habitatPoly <- fortify(elc_habitatBuff, region = "id")
-elc_habitatDF <- merge(elc_habitatPoly, elc_habitat@data, by = "id")
+#For fun - if you want to play with using package tmap()
+#construct tmap plot for Moose Winter habitat
+tm_shape(elc_habitat)+tm_sf("MOOSE_W", border.alpha = 0)
 
 #construct ggplot2 plot for Moose Winter Habitat
-elk_plot<-ggplot(elc_habitatDF, aes(x = long, y = lat,group=group, fill = as.factor(MOOSE_W))) + 
-  geom_polygon() + labs(x="Easting",y="Northing") + theme(axis.text.y = element_text(angle = 90, hjust=0.5))
+# Note - color = NA in the geom_sf() removes the border lines
+elk_plot<-ggplot() + 
+  geom_sf(data = elc_habitat, mapping = aes(fill = as.factor(MOOSE_W)), color = NA) + labs(x="Easting",y="Northing") + theme(axis.text.y = element_text(angle = 90, hjust=0.5))
 
 #adjust fill colors of MOOSE_W  (note that I just selected some random colors, but made "7" as blue)
 elk_plot2 <- elk_plot + scale_fill_manual(name="MOOSE_W",values=c("gray","gray", "red", "orange", "yellow", "green","darkblue"))
@@ -142,8 +145,8 @@ elk_plot2
 Bighorn Sheep Winter Habitat Model
 ```{r}
 #construct ggplot2 plot for Moose Winter Habitat
-sheep_plot<-ggplot(elc_habitatDF, aes(x = long, y = lat,group=group, fill = as.factor(SHEEP_W))) + 
-  geom_polygon() + labs(x="Easting",y="Northing") + theme(axis.text.y = element_text(angle = 90, hjust=0.5))
+sheep_plot<-ggplot() + 
+  geom_sf(data = elc_habitat, mapping = aes(fill = as.factor(SHEEP_W)), color = NA) + labs(x="Easting",y="Northing") + theme(axis.text.y = element_text(angle = 90, hjust=0.5))
 
 #adjust fill colors of MOOSE_W  (note that I just selected some random colors, but made "7" as blue)
 sheep_plot2 <- sheep_plot + scale_fill_manual(name="SHEEP_W",values=c("gray","gray", "red", "orange", "yellow", "green","darkblue"))
