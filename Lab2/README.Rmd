@@ -3,6 +3,7 @@ title: "WILD 562 - Lab 2: Habitat USE"
 author: "Mark Hebblewhite"
 date: "1/16/2021"
 output: github_document
+always_allow_html: true
 ---
 
 ```{r setup , include=FALSE}
@@ -196,7 +197,7 @@ wolf_w<-terra::rasterize(elc_habitat, mask.raster, field="WOLF_W")
 
 #Alternative using Stars Package 
 #deer_w <- st_as_stars(elc_habitat, name = attr(elc_habitat, "DEER_W"))
-deer_w_stars <- st_rasterize(elc_habitat["DEER_W"],template = mask.raster)
+deer_w_stars <- st_rasterize(elc_habitat["DEER_W"])
 moose_w_stars <- st_rasterize(elc_habitat["MOOSE_W"])
 elk_w_stars <- st_rasterize(elc_habitat["ELK_W"])
 sheep_w_stars <- st_rasterize(elc_habitat["SHEEP_W"])
