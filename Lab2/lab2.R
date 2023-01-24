@@ -21,7 +21,7 @@ ipak(packages)
 ## ----warning=FALSE-----------------------------------------------------------------------
 elc_habitat<-st_read(here::here("Data","elc_habitat.shp"))
 humanaccess<-st_read(here::here("Data","humanacess.shp"))
-plot(elc_habitat) ## not sure if you want to keep this in here to show what base plot would do??
+#plot(elc_habitat) ## not sure if you want to keep this in here to show what base plot would do??
 tmap_mode("plot") 
 tm_shape(elc_habitat) + tm_sf()
 tm_shape(humanaccess) + tm_sf()
@@ -43,6 +43,7 @@ legend(555000,5742500,unique(wolfyht$Pack),col=c("blue","red"),pch=1)
 ## ----warning=FALSE-----------------------------------------------------------------------
 #For fun - if you want to play with using package tmap()
 #construct tmap plot for Moose Winter habitat
+plot.new()
 tm_shape(elc_habitat)+tm_sf("MOOSE_W", border.alpha = 0)
 
 #construct ggplot2 plot for Moose Winter Habitat
@@ -104,6 +105,9 @@ wolf_w_stars <- st_rasterize(elc_habitat["WOLF_W"])
 plot(wolf_w)
 plot(wolf_w_stars)
 
+#can play interactive maps with tmap_mode view
+tmap_mode("view")
+tm_shape(wolf_w_stars) +tm_raster() 
 
 ## ---- eval = FALSE-----------------------------------------------------------------------
 ## #resample elevation and humanaccess to match mask.raster
@@ -124,12 +128,15 @@ elevation2<-rast(here::here("Data","Elevation2.tif")) #resampled
 #reading in elevation raster with stars
 elevation2_stars <- read_stars(here::here("Data","Elevation2.tif"))
 
+##Using Mapview -- can take a long time!
+#library(mapview)
+#mapview(wolfyht) + deer_w + sheep_w
 
-## ---- warning = FALSE, eval = FALSE------------------------------------------------------
-## library(mapview)
-## mapview(wolfyht) + deer_w + sheep_w
-
-
+#Faster Interactive map render
+tmap_mode("view")
+wolf_map <- tm_shape(wolfyht)+tm_dots()
+deer_layer <- wolf_map + tm_shape(deer_w_stars)+tm_raster()
+deer_layer + tm_shape(sheep_w_stars)+tm_raster()
 ## ----------------------------------------------------------------------------------------
 #first create an empty raster
 dist.raster <- rast()
@@ -182,6 +189,8 @@ levels(humanaccess$SUM_CLASS)[6]<-"NIL"
 highaccess<-humanaccess[humanaccess$SUM_CLASS=="HIGH" | humanaccess$SUM_CLASS=="VERY HIGH", ]
 
 #use package tmap() to create simple plots
+
+tmap_mode("plot")
 humanaccess_plot <- tm_shape(humanaccess)+tm_sf()
 humanaccess_plot + tm_shape(highaccess) + tm_sf(col = "red") 
 
@@ -214,8 +223,7 @@ table(rd.data$NAME)
 #43 25  4 15  3  2  1  
 #looks like 4 of the wolves do not have enough locations
 
-rd.test <- st_drop_geometry(rd.data) %>% 
-  filter(!NAME %in% c("69","81","82","84"))
+
 
 
 #remove these individuals with too few of locations
@@ -359,11 +367,10 @@ crs(all) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +to
 # Fit 99% mpc
 cp.all <- mcp(all, percent=99)
 
-plot(wolfyht, col="black")
+plot(all, col="black")
 plot(cp.all[cp.all@data$id=="Bow valley",], col="blue",add=TRUE)
 plot(cp.all[cp.all@data$id=="Red Deer",], col="green",add=TRUE)
 plot(wolfyht, col="black", add=TRUE)
-
 
 ## ---- warnings = FALSE-------------------------------------------------------------------
 #check area for each Red Deer wolf pack
