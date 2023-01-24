@@ -2,9 +2,7 @@
 title: "WILD 562 - Lab 2: Habitat USE"
 author: "Mark Hebblewhite"
 date: "1/16/2021"
-output:
-  html_document:
-    keep_md: true
+output: github_document
 ---
 
 ```{r setup , include=FALSE}
@@ -196,11 +194,17 @@ sheep_w<-terra::rasterize(elc_habitat, mask.raster, field="SHEEP_W")
 goat_w<-terra::rasterize(elc_habitat, mask.raster, field="GOAT_W")
 wolf_w<-terra::rasterize(elc_habitat, mask.raster, field="WOLF_W")
 
-#Alternative using Stars Package that I have not figured out yet - SMS
+#Alternative using Stars Package 
 #deer_w <- st_as_stars(elc_habitat, name = attr(elc_habitat, "DEER_W"))
-
+deer_w_stars <- st_rasterize(elc_habitat["DEER_W"])
+moose_w_stars <- st_rasterize(elc_habitat["MOOSE_W"])
+elk_w_stars <- st_rasterize(elc_habitat["ELK_W"])
+sheep_w_stars <- st_rasterize(elc_habitat["SHEEP_W"])
+goat_w_stars <- st_rasterize(elc_habitat["GOAT_W"])
+wolf_w_stars <- st_rasterize(elc_habitat["WOLF_W"])
 #plot result
 plot(wolf_w)
+plot(wolf_w_stars)
 ```
 
 Next, we need to align the previously developed rasters, elevation and distance to human access, with the raster.mask developed above to have the exact same extent, spatial resolution, projection, etc.  We do so using the resample() function from the raster package. 
@@ -209,7 +213,8 @@ Learn more about resampling by typing `?terra::resample`
 
 
 ```{r, eval = FALSE}
-#resample elevation and humanaccess to match mask.raster
+#resample elevation and humanaccess to match mask.raster 
+#note - not sure how to do this with stars package yet -SMS - 1/24/2023
 elevation2<-resample(elevation, mask.raster, method="bilinear")
 disthumaccess2<-resample(disthumaccess, mask.raster, method="bilinear")
 ```
@@ -222,8 +227,11 @@ writeRaster(deer_w, here::here("Lab2","Output", "deer_w2.tiff"), overwrite = TRU
 
 For today's lab we will us elevation rasters we created before the lab and re-load them from our working directory. 
 ```{r}
-#reading in elevation raster
+#reading in elevation raster with terra
 elevation2<-rast(here::here("Data","Elevation2.tif")) #resampled
+
+#reading in elevation raster with stars
+elevation2_stars <- read_stars(here::here("Data","Elevation2.tif"))
 ```
 
 How can we zoom into just one area of a raster object? There are many reasons we might want to, and many ways. One easy way is to 
@@ -297,8 +305,12 @@ humanaccess_plot + tm_shape(highaccess) + tm_sf(col = "red")
 ```
 Now you would go through and rasterize this following the steps above to make this a raster file. Note I already did this to save time - lets load the distance to high human access layer. 
 ```{r}
+#Reading in and plotting with terra
 disthighhumanaccess<-rast(here::here("Data","DistFromHighHumanAccess2.tif"))
 plot(disthighhumanaccess)
+
+#reading in with stars
+disthighhumanacess_stars <- read_stars(here::here("Data","DistFromHighHumanAccess2.tif"))
 ```
 
 * Break Out Discussion *
