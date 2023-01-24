@@ -1598,7 +1598,7 @@ wolf_df %>% group_by(pack) %>% summarise(mean(WOLF_W))
 **Discussion** how do the Bow Valley and Red Deer wolf packs differ
 across the different environmental covariates?
 
-\#Practice Excercises (e.g., Homework)
+# Practice Excercises (e.g., Homework)
 
 1)  What were the patterns of USE of habitat by wolves in the Red Deer
     and Bow Valley wolf packs for the 7 variables considered? Feel free
