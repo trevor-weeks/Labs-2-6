@@ -171,7 +171,7 @@ The steps involved in creating these rasters below are key, and, good to review.
 mask.raster <- rast()
 
 #set extent (note that I customized this extent so it covered both elc_habitat and humanacess)
-ext(mask.raster) <- c(xmin=443680.6, xmax=650430.4, ymin=5618405, ymax=5789236) 	
+ext(mask.raster) <- c(xmin=443680.6, xmax=650430.4, ymin=5618416, ymax=5789236) 	
 
 #set the resolution to 30 m 
 res(mask.raster)<-30
@@ -196,7 +196,7 @@ wolf_w<-terra::rasterize(elc_habitat, mask.raster, field="WOLF_W")
 
 #Alternative using Stars Package 
 #deer_w <- st_as_stars(elc_habitat, name = attr(elc_habitat, "DEER_W"))
-deer_w_stars <- st_rasterize(elc_habitat["DEER_W"])
+deer_w_stars <- st_rasterize(elc_habitat["DEER_W"],template = mask.raster)
 moose_w_stars <- st_rasterize(elc_habitat["MOOSE_W"])
 elk_w_stars <- st_rasterize(elc_habitat["ELK_W"])
 sheep_w_stars <- st_rasterize(elc_habitat["SHEEP_W"])
@@ -222,7 +222,7 @@ disthumaccess2<-resample(disthumaccess, mask.raster, method="bilinear")
 Exporting raster layers you have worked on using the `writeRaster` command from the terra package like this:
 ```{r, eval = FALSE}
 #write raster layers to file
-writeRaster(deer_w, here::here("Lab2","Output", "deer_w2.tiff"), overwrite = TRUE)
+writeRaster(deer_w, here::here("Lab2","Output", "DEER_W.tiff"), overwrite = TRUE)
 ```
 
 For today's lab we will us elevation rasters we created before the lab and re-load them from our working directory. 
@@ -274,8 +274,13 @@ accessdist <-system.time(distance(human.raster))
 
 Lets bring in the previously modeled distance to human layer. 
 ```{r}
+#using terra
 disthumanaccess2<-rast(here::here("Data","DistFromHumanAccess2.tif")) 
 plot(disthumanaccess2)
+
+#using stars
+disthumanaccess2_stars <- read_stars(here::here("Data","DistFromHumanAccess2.tif"))
+
 ```
 
 ## Advanced question: how would you calculate distance to high human use?
@@ -600,8 +605,11 @@ To extract covariate values is simple with the `extract()` command.
 Note today we are using tidyverse, which depends on tidyr, but I've loaded it separately later in summary statistics below. 
 
 ```{r}
+#with terra
 all_rasters<-c(deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w,elevation2, disthumanaccess2, disthighhumanaccess)
 
+#with stars
+#all_rasters_stars<-c(deer_w_stars, moose_w_stars, elk_w_stars, sheep_w_stars, goat_w_stars, wolf_w_stars,elevation2_stars, disthumanaccess2_stars, disthighhumanacess_stars)
 
 class(all_rasters)
 
@@ -610,13 +618,15 @@ cov.outRD<-extract(all_rasters, rd.data)
 head(cov.outRD)
 
 #Extract covariate values for available points
-cov.availRD<-extract(all_rasters, rd.avail)
+rd.avail_sf<-st_as_sf(rd.avail) #first change rd.avail to data type sf
+cov.availRD<-extract(all_rasters, rd.avail_sf)
 
 #Extract covariate values for Bow valley wolf data  
 cov.outBV<-extract(all_rasters, bv.data)
 
 #Extract covariate values for available points
-cov.availBV<-extract(all_rasters, bv.avail)
+bv.avail_sf <- st_as_sf(bv.avail)
+cov.availBV<-extract(all_rasters, bv.avail_sf)
 ```
 
 
@@ -626,11 +636,11 @@ Today we will focus on some exploratory analyses of JUST use of habitat covariat
 
 But before that we need to convert the matrix (a list) to a data frame, and add a new column for pack name.
 ```{r}
-rdused <- as.data.frame(cov.outRD)
+rdused <- cov.outRD
 rdused$pack <- c("Red Deer")
 
 ## repeat for Bow Valley pack
-bvused <- as.data.frame(cov.outBV)
+bvused <- cov.outBV
 bvused$pack <- c("Bow Valley")
 
 wolfused <- merge(rdused, bvused, all.x= TRUE, all.y = TRUE)
@@ -666,11 +676,11 @@ dim(wolfused)
 Ungulate habitat suitability models first. 
 ```{r}
 par(mfrow = c(2,3))
-hist(wolfused$deer_w2)
-hist(wolfused$elk_w2)
-hist(wolfused$moose_w2)
-hist(wolfused$sheep_w2)
-hist(wolfused$goat_w2)
+hist(wolfused$DEER_W)
+hist(wolfused$ELK_W)
+hist(wolfused$MOOSE_W)
+hist(wolfused$SHEEP_W)
+hist(wolfused$GOAT_W)
 ```
 
 Continuous covariates next, elevation (m), distance (m). 
@@ -705,16 +715,16 @@ multhist(list(wolfused$DistFromHumanAccess2[wolfused$pack=="Bow Valley"],wolfuse
 Next the prey figures
 ```{r}
 par(mfrow = c(2,3))
-multhist(list(wolfused$elk_w2[wolfused$pack=="Bow Valley"],wolfused$elk_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Elk HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
-multhist(list(wolfused$deer_w[wolfused$pack=="Bow Valley"],wolfused$deer_w[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Deer HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
-multhist(list(wolfused$moose_w2[wolfused$pack=="Bow Valley"],wolfused$moose_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Moose HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
-multhist(list(wolfused$sheep_w2[wolfused$pack=="Bow Valley"],wolfused$sheep_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Sheep HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
-multhist(list(wolfused$goat_w2[wolfused$pack=="Bow Valley"],wolfused$goat_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Goat HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$ELK_W[wolfused$pack=="Bow Valley"],wolfused$ELK_W[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Elk HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$DEER_W[wolfused$pack=="Bow Valley"],wolfused$DEER_W[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Deer HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$MOOSE_W[wolfused$pack=="Bow Valley"],wolfused$MOOSE_W[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Moose HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$SHEEP_W[wolfused$pack=="Bow Valley"],wolfused$SHEEP_W[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Sheep HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$GOAT_W[wolfused$pack=="Bow Valley"],wolfused$GOAT_W[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Goat HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
 ```
 
 ## Boxplots (from the lattice package)
 ```{r}
-bwplot(elk_w2 + deer_w2+moose_w2+ sheep_w2+goat_w2~pack, auto.key=TRUE,allow.multiple = TRUE,data=wolfused, outer=TRUE)
+bwplot(ELK_W + DEER_W+MOOSE_W+ SHEEP_W+GOAT_W~pack, auto.key=TRUE,allow.multiple = TRUE,data=wolfused, outer=TRUE)
 
 bwplot(DistFromHumanAccess2 + DistFromHighHumanAccess2 + Elevation2~pack, auto.key=TRUE,allow.multiple = TRUE,data=wolfused, outer=TRUE)
 ```
@@ -723,7 +733,7 @@ bwplot(DistFromHumanAccess2 + DistFromHighHumanAccess2 + Elevation2~pack, auto.k
 ```{r}
 aggregate(Elevation2 ~ pack, data=wolfused, FUN=mean)
 aggregate(DistFromHumanAccess2 ~ pack, data=wolfused, FUN=mean)
-aggregate(.~pack, data=wolfused[c("pack", "deer_w2", "elk_w2", "moose_w2", "sheep_w2", "goat_w2")], mean)
+aggregate(.~pack, data=wolfused[c("pack", "DEER_W", "ELK_W", "MOOSE_W", "SHEEP_W", "GOAT_W")], mean)
 
 sapply(wolfused, median, na.rm=TRUE)
 ```
@@ -737,12 +747,12 @@ wolf_df %>% group_by(pack) %>% summarise(mean(Elevation2))
 wolf_df %>% group_by(pack) %>% summarise(mean(DistFromHumanAccess2))
 wolf_df %>% group_by(pack) %>% summarise(mean(DistFromHighHumanAccess2))
 
-wolf_df %>% group_by(pack) %>% summarise(mean(moose_w2))
-wolf_df %>% group_by(pack) %>% summarise(mean(elk_w2))
-wolf_df %>% group_by(pack) %>% summarise(mean(sheep_w2))
-wolf_df %>% group_by(pack) %>% summarise(mean(deer_w2))
-wolf_df %>% group_by(pack) %>% summarise(mean(goat_w2))
-wolf_df %>% group_by(pack) %>% summarise(mean(wolf_w2))
+wolf_df %>% group_by(pack) %>% summarise(mean(MOOSE_W))
+wolf_df %>% group_by(pack) %>% summarise(mean(ELK_W))
+wolf_df %>% group_by(pack) %>% summarise(mean(SHEEP_W))
+wolf_df %>% group_by(pack) %>% summarise(mean(DEER_W))
+wolf_df %>% group_by(pack) %>% summarise(mean(GOAT_W))
+wolf_df %>% group_by(pack) %>% summarise(mean(WOLF_W))
 ```
 **Discussion** how do the Bow Valley and Red Deer wolf packs differ across the different environmental covariates?
 
