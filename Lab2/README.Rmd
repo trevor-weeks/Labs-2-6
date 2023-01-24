@@ -354,10 +354,6 @@ table(rd.data$NAME)
 #43 25  4 15  3  2  1  
 #looks like 4 of the wolves do not have enough locations
 
-rd.test <- st_drop_geometry(rd.data) %>% 
-  filter(!NAME %in% c("69","81","82","84"))
-
-
 #remove these individuals with too few of locations
 names(rd)<-"NAME"
 rd<-rd[rd@data$NAME!="69" & rd@data$NAME!="81" & rd@data$NAME!="82" & rd@data$NAME!="84",]
@@ -508,7 +504,7 @@ crs(all) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +to
 # Fit 99% mpc
 cp.all <- mcp(all, percent=99)
 
-plot(wolfyht, col="black")
+plot(all, col="black")
 plot(cp.all[cp.all@data$id=="Bow valley",], col="blue",add=TRUE)
 plot(cp.all[cp.all@data$id=="Red Deer",], col="green",add=TRUE)
 plot(wolfyht, col="black", add=TRUE)

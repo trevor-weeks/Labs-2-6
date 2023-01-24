@@ -680,10 +680,6 @@ table(rd.data$NAME)
 #43 25  4 15  3  2  1  
 #looks like 4 of the wolves do not have enough locations
 
-rd.test <- st_drop_geometry(rd.data) %>% 
-  filter(!NAME %in% c("69","81","82","84"))
-
-
 #remove these individuals with too few of locations
 names(rd)<-"NAME"
 rd<-rd[rd@data$NAME!="69" & rd@data$NAME!="81" & rd@data$NAME!="82" & rd@data$NAME!="84",]
