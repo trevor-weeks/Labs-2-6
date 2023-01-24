@@ -588,3 +588,173 @@ plot(rd.avail, add=TRUE)
 
 **Discuss in class: assumptions of sampling availability this way? Spatial scale of this sampling design?**
 
+# Objective 4 - Extracting Spatial Covariates For Points
+
+A key step in building a data frame for the analysis of habitat use or selection is associating animal use points, or availability points, with the underlying ecological covariate values at their point locations in space, and, sometimes, in time.  In Objective 4 we will create a raster stack/brick from our previously 'harmonized' spatial raster layers, and learn how to extract the spatial covariate values associated with these layers.   Now that we have a nice raster stack, we will start with this in subsequent labs. 
+
+Note the raster layers we created earlier, deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w, elevation2, disthumanaccess2.   Recall that to stack raster layers for sampling, we must have the same extents and resolutions across all layers otherwise it does not work, and we receive an error message. 
+
+To extract covariate values is simple with the `extract()` command. 
+**Note that the tidyverse package has a conflict with the raster function `extract`, which is a BIG pain. IF you have tidyverse loaded, remove it using this command:
+`.detach("tidyr")`
+Note today we are using tidyverse, which depends on tidyr, but I've loaded it separately later in summary statistics below. 
+
+```{r}
+all_rasters<-c(deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w,elevation2, disthumanaccess2, disthighhumanaccess)
+
+
+class(all_rasters)
+
+#Extract covariate values for Red Deer wolf data  
+cov.outRD<-extract(all_rasters, rd.data)
+head(cov.outRD)
+
+#Extract covariate values for available points
+cov.availRD<-extract(all_rasters, rd.avail)
+
+#Extract covariate values for Bow valley wolf data  
+cov.outBV<-extract(all_rasters, bv.data)
+
+#Extract covariate values for available points
+cov.availBV<-extract(all_rasters, bv.avail)
+```
+
+
+# Objective 5 – Exploratory Analyses of Wolf Habitat Use With R
+
+Today we will focus on some exploratory analyses of JUST use of habitat covariates by the 2 wolf packs. The first step is to merge the cov.outRD and cov.outBV dataframes with a new field for pack. 
+
+But before that we need to convert the matrix (a list) to a data frame, and add a new column for pack name.
+```{r}
+rdused <- as.data.frame(cov.outRD)
+rdused$pack <- c("Red Deer")
+
+## repeat for Bow Valley pack
+bvused <- as.data.frame(cov.outBV)
+bvused$pack <- c("Bow Valley")
+
+wolfused <- merge(rdused, bvused, all.x= TRUE, all.y = TRUE)
+str(wolfused)
+head(wolfused)
+
+## and for next week, lets add a new column for a 1=used 0 = avail
+wolfused$used <- 1
+```
+
+## Numerical summaries (review from Lab 1)
+
+First we will conduct basic univariate analyses by pack for the different resource covariates extracted for the USED wolf telemetry data. 
+```{r}
+summary(wolfused)
+```
+
+Note that there are 4 missing NA values in the distance to human access layer. Why?
+```{r}
+plot(disthumanaccess2)
+plot(wolfyht, add = TRUE)
+```
+
+This is a really common problem in combining raster layers of different sources, spatial extents, etc. Another common example we will see later is CLOUD categories in landcover models.  Here, we will clean up missing data in the distance to access variable.  Missing data are a problem, we will replace NA's with 0's for now. Discuss in class. 
+```{r}
+#Note, this replaces just NAs for just the wolf used locations with NA for distance to human access, but note there were 13 missing values, say, for some of the ELC H.S.I models. 
+wolfused <- na.omit(wolfused)
+summary(wolfused)
+dim(wolfused)
+```
+
+## Graphical data visualization
+Ungulate habitat suitability models first. 
+```{r}
+par(mfrow = c(2,3))
+hist(wolfused$deer_w2)
+hist(wolfused$elk_w2)
+hist(wolfused$moose_w2)
+hist(wolfused$sheep_w2)
+hist(wolfused$goat_w2)
+```
+
+Continuous covariates next, elevation (m), distance (m). 
+```{r}
+par(mfrow = c(3,1))
+hist(wolfused$Elevation2)
+hist(wolfused$DistFromHumanAccess2)
+hist(wolfused$DistFromHighHumanAccess2)
+```
+
+## Data exploration by wolf pack
+```{r}
+par(mfrow = c(1,1))
+# Plot Bow Valley
+hist(wolfused$Elevation2[wolfused$pack=="Bow Valley"],breaks=50, xlim = c(1400,2250), probability = TRUE, main="Wolf Habitat Selection", xlab="Elevation") 
+
+#Plot Red Deer
+hist(wolfused$Elevation2[wolfused$pack=="Red Deer"],breaks=50, col="darkgray",probability =TRUE, add=TRUE)
+# Add legend
+legend("topright", c("Bow Valley", "Red Deer"), fill = c("white","darkgray"),border = "black")
+```
+
+So, the Red Deer wolf pack 'uses' higher elevations than the Bow Valley wolf pack. Now, repeat these steps on your own for all other covariates using the plotrix R package. 
+```{r}
+par(mfrow = c(2,1))
+multhist(list(wolfused$Elevation2[wolfused$pack=="Bow Valley"],wolfused$Elevation2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Elevation")
+# I chose to put a legend in the lower right hand graph. 
+# That's what the additional arguments in the line below specify.
+multhist(list(wolfused$DistFromHumanAccess2[wolfused$pack=="Bow Valley"],wolfused$DistFromHumanAccess2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Distance From Humans", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+```
+
+Next the prey figures
+```{r}
+par(mfrow = c(2,3))
+multhist(list(wolfused$elk_w2[wolfused$pack=="Bow Valley"],wolfused$elk_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Elk HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$deer_w[wolfused$pack=="Bow Valley"],wolfused$deer_w[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Deer HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$moose_w2[wolfused$pack=="Bow Valley"],wolfused$moose_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Moose HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$sheep_w2[wolfused$pack=="Bow Valley"],wolfused$sheep_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Sheep HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+multhist(list(wolfused$goat_w2[wolfused$pack=="Bow Valley"],wolfused$goat_w2[wolfused$pack=="Red Deer"]), freq = TRUE, main = "Goat HSI", legend.text = c("Bow Valley", "Red Deer"), args.legend = list(bty = "n"))
+```
+
+## Boxplots (from the lattice package)
+```{r}
+bwplot(elk_w2 + deer_w2+moose_w2+ sheep_w2+goat_w2~pack, auto.key=TRUE,allow.multiple = TRUE,data=wolfused, outer=TRUE)
+
+bwplot(DistFromHumanAccess2 + DistFromHighHumanAccess2 + Elevation2~pack, auto.key=TRUE,allow.multiple = TRUE,data=wolfused, outer=TRUE)
+```
+
+## Summary Statistics
+```{r}
+aggregate(Elevation2 ~ pack, data=wolfused, FUN=mean)
+aggregate(DistFromHumanAccess2 ~ pack, data=wolfused, FUN=mean)
+aggregate(.~pack, data=wolfused[c("pack", "deer_w2", "elk_w2", "moose_w2", "sheep_w2", "goat_w2")], mean)
+
+sapply(wolfused, median, na.rm=TRUE)
+```
+
+## Summary Statistics with Tibble
+```{r}
+library(tidyverse)
+wolf_df <- as_tibble(wolfused)
+
+wolf_df %>% group_by(pack) %>% summarise(mean(Elevation2))
+wolf_df %>% group_by(pack) %>% summarise(mean(DistFromHumanAccess2))
+wolf_df %>% group_by(pack) %>% summarise(mean(DistFromHighHumanAccess2))
+
+wolf_df %>% group_by(pack) %>% summarise(mean(moose_w2))
+wolf_df %>% group_by(pack) %>% summarise(mean(elk_w2))
+wolf_df %>% group_by(pack) %>% summarise(mean(sheep_w2))
+wolf_df %>% group_by(pack) %>% summarise(mean(deer_w2))
+wolf_df %>% group_by(pack) %>% summarise(mean(goat_w2))
+wolf_df %>% group_by(pack) %>% summarise(mean(wolf_w2))
+```
+**Discussion** how do the Bow Valley and Red Deer wolf packs differ across the different environmental covariates?
+
+#Practice Excercises (e.g., Homework)
+
+1)	What were the patterns of USE of habitat by wolves in the Red Deer and Bow Valley wolf packs for the 7 variables considered? Feel free to use tables/figures.
+
+2)	Compare patterns of use between wolves in the Red Deer pack and Bow Valley wolf packs for elevation and distance to human access – what biological, statistical, or methodological reasons might be driving the observed differences between packs?
+
+3)	How do the patterns of use for UNGULATE layers correspond to the observations of (Hebblewhite et al. 2004) that diet selection (4th order diet selection following Johnson et al. (1980) by wolves in the Canadian Rockies follows this rank order?: Elk > Deer>Moose>Sheep>Goat. How do the two different packs differ? What possible explanations can you give for differences between diet selection and habitat use?
+
+4)	As a form of model validation, how does our frequency of use of wolf telemetry locations compare to that predicted by the ELC_HABITAT Habitat Suitability Index Model winter wolf H.S.I. values? Make a graph showing the correspondence between frequency of use and predicted wolf H.S.I. values. What can you conclude from this?
+
+
+
