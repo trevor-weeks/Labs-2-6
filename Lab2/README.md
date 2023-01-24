@@ -968,7 +968,7 @@ crs(all) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +to
 # Fit 99% mpc
 cp.all <- mcp(all, percent=99)
 
-plot(wolfyht, col="black")
+plot(all, col="black")
 plot(cp.all[cp.all@data$id=="Bow valley",], col="blue",add=TRUE)
 plot(cp.all[cp.all@data$id=="Red Deer",], col="green",add=TRUE)
 plot(wolfyht, col="black", add=TRUE)
@@ -1164,11 +1164,7 @@ in summary statistics below.
 ``` r
 #with terra
 all_rasters<-c(deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w,elevation2, disthumanaccess2, disthighhumanaccess)
-```
 
-    ## Warning: [rast] SRS do not match
-
-``` r
 #with stars
 #all_rasters_stars<-c(deer_w_stars, moose_w_stars, elk_w_stars, sheep_w_stars, goat_w_stars, wolf_w_stars,elevation2_stars, disthumanaccess2_stars, disthighhumanacess_stars)
 
