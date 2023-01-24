@@ -235,9 +235,9 @@ elevation2<-rast(here::here("Data","Elevation2.tif")) #resampled
 elevation2_stars <- read_stars(here::here("Data","Elevation2.tif"))
 ```
 
-How can we zoom into just one area of a raster object? There are many reasons we might want to, and many ways. One easy way is to 
+How can we zoom into just one area of a raster object? There are many reasons we might want to, and many ways. One easy way is to use `mapview()`. Note - mapview is not evaluated here because the html image does not play well with .md files - try evaluating within your own project
 
-```{r, warning = FALSE}
+```{r, warning = FALSE, eval = FALSE}
 library(mapview)
 mapview(wolfyht) + deer_w + sheep_w
 ```
