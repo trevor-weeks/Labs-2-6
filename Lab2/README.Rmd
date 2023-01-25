@@ -167,6 +167,7 @@ The steps involved in creating these rasters below are key, and, good to review.
 3. `resample()` - note that existing raster layers, e.g., elevation, distance to human access, had a different set of dimensions (extents) last week when we created our raster stack. They may have also had different resolutions, in which case we need to resample to a consistent resolution. 
 
 ```{r}
+##currently using terra package -- not sure with STARS yet -- SMS
 # Create a mask raster to use as a template for converting shapefile data to rasters
 #create an empty raster
 mask.raster <- rast()
@@ -175,7 +176,7 @@ mask.raster <- rast()
 ext(mask.raster) <- c(xmin=443680.6, xmax=650430.4, ymin=5618416, ymax=5789236) 	
 
 #set the resolution to 30 m 
-res(mask.raster)<-30
+res(mask.raster)<-300
 
 #match projection to elc_habitat shapefile
 crs(mask.raster)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
@@ -240,6 +241,12 @@ How can we zoom into just one area of a raster object? There are many reasons we
 ```{r, warning = FALSE, eval = FALSE}
 library(mapview)
 mapview(wolfyht) + deer_w + sheep_w
+
+#Tmap method -- can be faster 
+tmap_mode("view")
+wolf_map <- tm_shape(wolfyht)+tm_dots()
+deer_layer <- wolf_map + tm_shape(deer_w_stars)+tm_raster()
+deer_layer + tm_shape(sheep_w_stars)+tm_raster()
 ```
 
 ## Part 1b - Distance to Raster (Human Access Layer)
@@ -255,7 +262,7 @@ dist.raster <- rast()
 ext(dist.raster) <- ext(humanaccess)
 
 #set the resolution to 30 m (Note that this takes a very long time with a 30 m resolution-even on my machine)
-res(dist.raster)<-30
+res(dist.raster)<-300
 
 #match projection to humanaccess shapefile
 crs(dist.raster)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
