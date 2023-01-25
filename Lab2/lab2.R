@@ -128,11 +128,11 @@ elevation2<-rast(here::here("Data","Elevation2.tif")) #resampled
 #reading in elevation raster with stars
 elevation2_stars <- read_stars(here::here("Data","Elevation2.tif"))
 
-##Using Mapview -- can take a long time!
-#library(mapview)
-#mapview(wolfyht) + deer_w + sheep_w
+#Using Mapview -- time this takes to run varies depending on resolution
+library(mapview)
+mapview(wolfyht) + deer_w + sheep_w
 
-#Faster Interactive map render
+#Tmap method -- can be faster 
 tmap_mode("view")
 wolf_map <- tm_shape(wolfyht)+tm_dots()
 deer_layer <- wolf_map + tm_shape(deer_w_stars)+tm_raster()
