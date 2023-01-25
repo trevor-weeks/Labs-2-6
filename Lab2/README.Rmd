@@ -610,6 +610,11 @@ Note today we are using tidyverse, which depends on tidyr, but I've loaded it se
 
 ```{r}
 #with terra
+#first re-sampling so that extents match
+disthumanaccess2 <- resample(disthumanaccess2, deer_w)
+disthighhumanaccess <- resample(disthighhumanaccess, deer_w)
+
+#stacking rasters
 all_rasters<-c(deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w,elevation2, disthumanaccess2, disthighhumanaccess)
 
 #with stars
