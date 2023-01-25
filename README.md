@@ -2,11 +2,11 @@
 
 In the next 5 R computer labs (Labs 2 - 6), you have been charged with developing a conceptual framework for modeling wolf habitat use and selection to identify habitat for wolves as a function of a mix of environmental and 'biotic' variables, some of which we will explore today. These variables include elevation, landcover, human activity, and ungulate habitat suitability. The next 4 (or more) labs will build on each other as we explore the definition of wolf habitat using sample data from the Northern Rockies.
 
-## Using GitHub
+## Version Control with Git, GitHub, and R
 
-Why re-create a good thing?
+First and foremost, set up a [GitHub account](https://github.com/login).
 
-Check out [Happy Git and GitHub for the useR](https://happygitwithr.com/index.html). From installation, to connecting GitHub with Rstudio, to Git fundamentals, Happy Git has got it covered.
+Then, check out [Happy Git and GitHub for the useR](https://happygitwithr.com/index.html). This guide will walk you through installing Git, connecting Git/GitHub repositories with Rstudio, and Git fundamentals.
 
 ## Other Resources for working with Spatial Data in R
 
