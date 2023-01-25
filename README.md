@@ -8,6 +8,19 @@ First and foremost, set up a [GitHub account](https://github.com/login).
 
 Then, check out [Happy Git and GitHub for the useR](https://happygitwithr.com/index.html). This guide will walk you through installing Git, connecting Git/GitHub repositories with Rstudio, and Git fundamentals.
 
+
+## Using GitHub for this lab
+
+Best Practice for working with GitHub and this lab will be to "fork" the repositories. Forking a repository creates a copy of the repository within your personal GitHub account. Then, from your forked version of the repository you can create a "clone" of the remote repo locally on your computer. This will allow you to "pull" new changes from the original repo and eventually create pull requests to merge changes you have made with the original.
+
+To keep your clone up to date with the original, enter the following in your terminal:
+
+```
+$ git remote add upstream https://github.com/octocat/Spoon-Knife.git
+```
+
+This process is described beautifully [here](https://ecorepsci.github.io/reproducible-science/github.html#forking-a-repository) in Dr. Simona Picardi's digital book [Reproducible Data Science](https://ecorepsci.github.io/reproducible-science/index.html) - another amazing resource! 
+
 ## Other Resources for working with Spatial Data in R
 
 -   [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html) Check out the Articles tab at the top of the page to toggle between topics
