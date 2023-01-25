@@ -1,7 +1,7 @@
 ---
 title: "WILD 562 - Lab 2: Habitat USE"
 author: "Mark Hebblewhite"
-date: "1/16/2021"
+date: "1/25/2023"
 output: github_document
 always_allow_html: true
 ---
@@ -62,7 +62,7 @@ related to wolf occupancy.
 The R packages we will load up front today are:
 
 ```{r eval = TRUE, results = 'hide'}
-packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars", "dplyr")
+packages <- c("ks", "here", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars", "dplyr")
 ```
 
 Using the wrapper package reviewed in Lab 1:
