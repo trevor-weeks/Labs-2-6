@@ -91,13 +91,15 @@ Also, as we gain familiarity with using spatial objects like shapefiles and rast
 
 1) https://nceas.github.io/oss-lessons/spatial-data-gis-law/3-mon-intro-gis-in-r.html
 and
-2) https://www.neonscience.org/resources/learning-hub/tutorials/dc-plot-raster-data-r 
+2) https://www.neonscience.org/resources/learning-hub/tutorials/dc-plot-raster-data-r  
 
-First we will read in shapefiles from the GISdata folder in your R project directory. 
+First we will read in shapefiles from the GISdata folder in your R project directory.  We will use tmap to create basic maps of these spatial layers. Read more about tmap here: 
+https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html
+
 ```{r warning=FALSE}
 elc_habitat<-st_read(here::here("Data","elc_habitat.shp"))
 humanaccess<-st_read(here::here("Data","humanacess.shp"))
-plot(elc_habitat) ## not sure if you want to keep this in here to show what base plot would do??
+plot(elc_habitat) 
 tmap_mode("plot") 
 tm_shape(elc_habitat) + tm_sf()
 tm_shape(humanaccess) + tm_sf()
@@ -106,7 +108,7 @@ wolfyht<-st_read(here::here("Data","wolfyht.shp"))
 head(wolfyht)
 ```
 
-As a preliminary step, lets plot some of the wolfyht using the base plot function, and using some of the structure of the wolfyht object. Lets remind ourselves of the structure of the SpatialPointsDataFrame first. 
+As a preliminary step, lets plot some of the wolfyht using the base plot function, and using some of the structure of the wolfyht object. Lets remind ourselves of the structure of the sf object wolfyht. 
 ```{r message=FALSE}
 class(wolfyht)
 crs(wolfyht,proj = TRUE) # note this is a UTM projected map system. 
@@ -129,16 +131,16 @@ Briefly, habitat suitability index models were developed by Holroyd and Van Tigh
 ```{r warning=FALSE}
 #For fun - if you want to play with using package tmap()
 #construct tmap plot for Moose Winter habitat
-tm_shape(elc_habitat)+tm_sf("MOOSE_W", border.alpha = 0)
+tm_shape(elc_habitat) + tm_sf("MOOSE_W", border.alpha = 0)
 
 #construct ggplot2 plot for Moose Winter Habitat
 # Note - color = NA in the geom_sf() removes the border lines
-elk_plot<-ggplot() + 
+moose_plot<-ggplot() + 
   geom_sf(data = elc_habitat, mapping = aes(fill = as.factor(MOOSE_W)), color = NA) + labs(x="Easting",y="Northing") + theme(axis.text.y = element_text(angle = 90, hjust=0.5))
 
 #adjust fill colors of MOOSE_W  (note that I just selected some random colors, but made "7" as blue)
-elk_plot2 <- elk_plot + scale_fill_manual(name="MOOSE_W",values=c("gray","gray", "red", "orange", "yellow", "green","darkblue"))
-elk_plot2
+moose_plot2 <- moose_plot + scale_fill_manual(name="MOOSE_W",values=c("gray","gray", "red", "orange", "yellow", "green","darkblue"))
+moose_plot2
 ```
 
 Bighorn Sheep Winter Habitat Model
@@ -212,28 +214,31 @@ plot(wolf_w_stars)
 Next, we need to align the previously developed rasters, elevation and distance to human access, with the raster.mask developed above to have the exact same extent, spatial resolution, projection, etc.  We do so using the resample() function from the raster package. 
 
 Learn more about resampling by typing `?terra::resample` 
-
-
-```{r, eval = FALSE}
-#resample elevation and humanaccess to match mask.raster 
-#note - not sure how to do this with stars package yet -SMS - 1/24/2023
-elevation2<-resample(elevation, mask.raster, method="bilinear")
-disthumaccess2<-resample(disthumaccess, mask.raster, method="bilinear")
-```
-
 Exporting raster layers you have worked on using the `writeRaster` command from the terra package like this:
 ```{r, eval = FALSE}
 #write raster layers to file
 writeRaster(deer_w, here::here("Lab2","Output", "DEER_W.tiff"), overwrite = TRUE)
 ```
 
-For today's lab we will us elevation rasters we created before the lab and re-load them from our working directory. 
+For today's lab we will us elevation and distance to human access rasters we created before the lab and re-load them from our working directory. 
 ```{r}
 #reading in elevation raster with terra
 elevation2<-rast(here::here("Data","Elevation2.tif")) #resampled
 
 #reading in elevation raster with stars
 elevation2_stars <- read_stars(here::here("Data","Elevation2.tif"))
+
+#reading in elevation raster with terra
+disthumanaccess<-rast(here::here("Data","DistFromHumanAccess2.tif")) 
+disthighhumanaccess<-rast(here::here("Data","DistFromHighHumanAccess2.tif")) 
+```
+
+```{r, eval = FALSE}
+#resample elevation and humanaccess to match mask.raster 
+#note - not sure how to do this with stars package yet
+elevation2<-resample(elevation2, mask.raster, method="bilinear")
+disthumaccess2<-resample(disthumanaccess, mask.raster, method="bilinear")
+disthighhumaccess2<-resample(disthighhumanaccess, mask.raster, method="bilinear")
 ```
 
 How can we zoom into just one area of a raster object? There are many reasons we might want to, and many ways. One easy way is to use `mapview()`. Note - mapview is not evaluated here because the html image does not play well with .md files - try evaluating within your own project
@@ -253,7 +258,7 @@ deer_layer + tm_shape(sheep_w_stars)+tm_raster()
 
 First, there are many ways to evaluate human activity, polygonal (e.g., cities, parks), vector (roads, lines, points=houses), or more integrative spatial measures like density of human features or distance to human features.  Later in class we will compare and contrast why we would use distance to or density of a human feature as a resource covariate for wildlife. 
 
-For now, I already created this raster layer because it took a LONG time on a desktop. So this might be an example where using ArcGIS might save time.But I include the code for illustration. 
+For now, I already created this raster layer because it took a LONG time on a desktop. So this might be an example where using ArcGIS might save time. But I include the code for illustration. 
 
 ```{r}
 #first create an empty raster
@@ -280,16 +285,6 @@ accessdist <-system.time(distance(human.raster))
 
 ```
 
-Lets bring in the previously modeled distance to human layer. 
-```{r}
-#using terra
-disthumanaccess2<-rast(here::here("Data","DistFromHumanAccess2.tif")) 
-plot(disthumanaccess2)
-
-#using stars
-disthumanaccess2_stars <- read_stars(here::here("Data","DistFromHumanAccess2.tif"))
-
-```
 
 ## Advanced question: how would you calculate distance to high human use?
 
@@ -316,21 +311,11 @@ highaccess<-humanaccess[humanaccess$SUM_CLASS=="HIGH" | humanaccess$SUM_CLASS=="
 humanaccess_plot <- tm_shape(humanaccess)+tm_sf()
 humanaccess_plot + tm_shape(highaccess) + tm_sf(col = "red") 
 ```
-Now you would go through and rasterize this following the steps above to make this a raster file. Note I already did this to save time - lets load the distance to high human access layer. 
-```{r}
-#Reading in and plotting with terra
-disthighhumanaccess<-rast(here::here("Data","DistFromHighHumanAccess2.tif"))
-plot(disthighhumanaccess)
-
-#reading in with stars
-disthighhumanacess_stars <- read_stars(here::here("Data","DistFromHighHumanAccess2.tif"))
-```
-
-* Break Out Discussion *
+Now you would go through and rasterize this following the steps above to make this a raster file. Note I already did this with the distance to high human access layer.
 
 # Objective 2 - Home Range Analysis 
 
-Note I've done these here for the individual level I added the pack-level analysis below. But our goal will be to calculate 99% minimum convex polygon for individual wolves in the Red Deer wolf pack.  Our first step is to convert the SpatialPointsDataFrame to spatial points object. 
+Note I've done these here for the individual level I added the pack-level analysis below. But our goal will be to calculate 99% minimum convex polygon for individual wolves in the Red Deer wolf pack.  Our first step is to change the wolfyht `sf` data.frame to a adehabitat::spatial points object. 
 
 For these steps of estimating home ranges, we will be using the adehabitat set of packages created by Clement Calenge that are EXTREMELY valuable in habitat and spatial analyses in Ecology. 
  
@@ -586,6 +571,8 @@ plot(rd.avail)
 bv.avail<-spsample(bow.valleyPOLY, 1000, "random")
 plot(bv.avail)
 ```
+
+# `sp` way to sample was spsample, which is in adehabitat?? but new way might be st_sampl(x, etc..) - very similar. 
 
 Lets plot them all together, used and home-range level availability. 
 ```{r}
