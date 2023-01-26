@@ -445,22 +445,22 @@ plot(wolfkde$fitted.Elev, wolfkde$Elevation2)
 First lets explore the distribution of predicted values from the elevation model. 
 ```{r}
 # ggplot 2 explore basic histogram functio
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_histogram()
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_histogram()
 # lets explore faceting
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ .)
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ ., scales = "free")
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev, fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16))
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ .)
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ ., scales = "free")
+ggplot(wolfkde, aes(x=fitted.Elev, fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16))
 # lets redo this graph using faceting by pack
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev, y=..density.., fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) + facet_grid(pack ~ ., scales="free")
+ggplot(wolfkde, aes(x = fitted.Elev, y=after_stat(density), fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) + facet_grid(pack ~ ., scales="free")
 ```
 This gives us a firm sense that things differ by pack, not only the # of locations, but also the relatively lower predicted probability of use for the Red deer wolf pack compared to the Bow Valley wolf pack. Why is this? Remind ourselves of the structure of our model - it is a simple GLM of used ~ elevation, with no differences or accounting for differences between wolf packs.  You can imagine an excercise would be to estimate the pack-specific univariate beta-coefficients between wolf packs for the same suite of covariates.  What ecological questions would this address? 
 
 ```{r}
 # Now lets explore fitting functions to the distributions
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_density()
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev), fill=usedFactor) + geom_density(alpha=0.5) + xlim(0,1)+xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) 
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_density()
+ggplot(wolfkde, aes(x=fitted.Elev), fill=usedFactor) + geom_density(alpha=0.5) + xlim(0,1)+xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) 
 # kernel lines
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev, y=..density.., fill=usedFactor)) + geom_histogram(binwidth=0.05) + geom_density(alpha = 0.5) + facet_grid(pack ~ .)
+ggplot(wolfkde, aes(x=fitted.Elev, y=..density.., fill=usedFactor)) + geom_histogram(binwidth=0.05) + geom_density(alpha = 0.5) + facet_grid(pack ~ .)
 
 ```
 
@@ -518,13 +518,13 @@ ggplot(wolfkde, aes(x=Elevation2, y=fitted.Elev)) + geom_point() + stat_smooth(m
 Lastly, I will illustrate our first use of the effects package which is especially nice later for quickly visualizing interactions. `?effect`. Learn more here https://www.jstatsoft.org/article/view/v008i15
 
 ```{r}
-plot(effect("Elevation2", elev), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)") 
+plot(effects::effect("Elevation2", elev), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)") 
 ```
 
 Lets explore the effects() function more with other variables. 
 
 ```{r}
-plot(effect("deer_w2", deer), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)")
+plot(effects::effect("deer_w2", deer), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)")
 ```
 
 ## Saving Graphics 
