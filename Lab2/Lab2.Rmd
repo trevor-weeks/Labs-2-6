@@ -99,11 +99,9 @@ https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html
 ```{r warning=FALSE}
 elc_habitat<-st_read(here::here("Data","elc_habitat.shp"))
 humanaccess<-st_read(here::here("Data","humanacess.shp"))
-<<<<<<< HEAD
-#plot(elc_habitat) ## not sure if you want to keep this in here to show what base plot would do??
-=======
+
 plot(elc_habitat) 
->>>>>>> 7af382b5e4b0670910eff1cf14d7c135d331ffc9
+
 tmap_mode("plot") 
 tm_shape(elc_habitat) + tm_sf()
 tm_shape(humanaccess) + tm_sf()
@@ -135,12 +133,9 @@ Briefly, habitat suitability index models were developed by Holroyd and Van Tigh
 ```{r warning=FALSE}
 #For fun - if you want to play with using package tmap()
 #construct tmap plot for Moose Winter habitat
-<<<<<<< HEAD
 
-tm_shape(elc_habitat)+tm_sf("MOOSE_W", border.alpha = 0)
-=======
 tm_shape(elc_habitat) + tm_sf("MOOSE_W", border.alpha = 0)
->>>>>>> 7af382b5e4b0670910eff1cf14d7c135d331ffc9
+
 
 #construct ggplot2 plot for Moose Winter Habitat
 # Note - color = NA in the geom_sf() removes the border lines
