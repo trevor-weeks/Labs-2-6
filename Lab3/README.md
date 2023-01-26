@@ -248,7 +248,7 @@ boxplot(goat_w2~usedFactor, main = "Goat", ylab="goat_w2", xlab="usedFactor", da
 boxplot(sheep_w2~usedFactor, main = "Sheep", ylab="sheep_w2", xlab="usedFactor", data=wolfkde)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> Class
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> Class
 discussion: how do we interpret the comparison of used and available for
 ungulate prey for wolves in Banff?
 
@@ -261,7 +261,7 @@ boxplot(DistFromHumanAccess2~usedFactor, data=wolfkde, main = "Dist. Human Acces
 boxplot(DistFromHighHumanAccess2~usedFactor, data=wolfkde, main = "Dist. High Human Access", ylab="elk_w2", xlab="usedFactor")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- --> Class
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- --> Class
 discussion: similarly, what do we think? Do wolves like humans? Do
 wolves like elevation?
 
@@ -283,7 +283,7 @@ boxplot(goat_w2~usedFactor, data=bvkde, main = "Goat", ylab="goat_w2", xlab="use
 boxplot(sheep_w2~usedFactor, data=bvkde, main = "Sheep", ylab="sheep_w2", xlab="usedFactor")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 Now lets do for Elevation and Distance from Human Access2
 
@@ -294,7 +294,7 @@ boxplot(DistFromHumanAccess2~usedFactor, data=bvkde, main = "Dist. Human Access"
 boxplot(DistFromHighHumanAccess2~usedFactor, data=bvkde, main = "Dist. High Human Access", ylab="elk_w2", xlab="usedFactor")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 Class discussion: how does the Bow Valley pack compare to all wolves in
 BNP?
@@ -319,7 +319,7 @@ boxplot(goat_w2~usedFactor, data=rdkde, main = "Goat", ylab="goat_w2", xlab="use
 boxplot(sheep_w2~usedFactor, data=rdkde, main = "Sheep", ylab="sheep_w2", xlab="usedFactor")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 Now lets do for Elevation and Distance from Human Access2
 
@@ -330,7 +330,7 @@ boxplot(DistFromHumanAccess2~usedFactor, data=rdkde, main = "Dist. Human Access 
 boxplot(DistFromHighHumanAccess2~usedFactor, data=rdkde, main = "Dist. High Human Access", ylab="elk_w2", xlab="usedFactor")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> Class
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> Class
 discussion: and what about the red deer pack?
 
 It would be nice if there was a way to graph both by pack and used?
@@ -341,50 +341,50 @@ par(mfrow = c(1,1))
 boxplot(Elevation2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Elevation Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 boxplot(DistFromHumanAccess2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Human Access Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 ``` r
 boxplot(deer_w2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Elevation Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
 
 ``` r
 boxplot(moose_w2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Elevation Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
 
 ``` r
 boxplot(elk_w2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Elevation Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
 
 ``` r
 boxplot(goat_w2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Elevation Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
 
 ``` r
 boxplot(sheep_w2~used+pack, data = wolfkde, main = "Bow Valley vs. Red Deer Elevation Used-Avail")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-7.png)<!-- -->
 
 ``` r
 ## using lattice package
 bwplot(sheep_w2+ goat_w2 + elk_w2+moose_w2+ deer_w2~as.factor(usedFactor)|pack, data = wolfkde, layout = c(2,5), pch = "|", outer = TRUE)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-9-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-8.png)<!-- -->
 
 ## Numerical Summary Statistics
 
@@ -571,16 +571,16 @@ function learn more about ?plogis() and ? rbinom()
 rbinom(100, 1, 0.5)
 ```
 
-    ##   [1] 0 1 0 1 1 0 1 0 0 0 0 0 0 0 0 0 1 0 1 1 1 1 1 0 0 0 0 1 1 1 0 0 0 1 1 0 1
-    ##  [38] 1 1 1 1 0 0 1 0 1 0 1 0 1 1 1 1 1 0 0 0 1 0 0 0 1 1 0 0 0 0 0 0 0 1 0 1 0
-    ##  [75] 1 0 0 1 1 1 1 1 1 0 0 1 1 1 0 0 1 0 1 1 0 0 1 1 1 1
+    ##   [1] 1 1 0 1 0 0 0 1 0 0 1 0 0 0 1 0 0 1 1 1 1 0 1 0 1 0 1 0 0 0 0 1 0 1 1 1 1
+    ##  [38] 1 0 0 0 0 0 0 1 1 0 1 1 1 0 0 0 1 1 0 1 1 1 1 1 0 0 1 0 0 0 1 1 1 0 1 0 0
+    ##  [75] 1 0 1 1 1 1 1 0 1 1 0 1 1 0 0 1 1 0 0 0 1 0 1 1 0 0
 
 ``` r
 trial = rbinom(100, 1, 0.5)
 sum(trial)
 ```
 
-    ## [1] 47
+    ## [1] 53
 
 ``` r
 ## What about say, a survival probability of 0.9.
@@ -588,7 +588,7 @@ surv1 <- rbinom(100, 1, 0.9)
 sum(surv1)
 ```
 
-    ## [1] 81
+    ## [1] 87
 
 So 92 animals survived, say. (it will depend on your simulation).
 
@@ -650,7 +650,7 @@ plot( y ~ x)
 abline(lm((y~x)))
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Lets fit a linear model, assuming a gaussian distributed Y variable
 
@@ -665,25 +665,25 @@ summary(wrong)
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.96438 -0.17771 -0.00289  0.22292  0.70991 
+    ## -0.97979 -0.22312 -0.00344  0.22120  1.01334 
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)  0.51485    0.03441   14.96   <2e-16 ***
-    ## x            0.01249    0.00118   10.58   <2e-16 ***
+    ## (Intercept) 0.495050   0.036399   13.60  < 2e-16 ***
+    ## x           0.011823   0.001248    9.47 1.57e-15 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.3459 on 99 degrees of freedom
-    ## Multiple R-squared:  0.5306, Adjusted R-squared:  0.5259 
-    ## F-statistic: 111.9 on 1 and 99 DF,  p-value: < 2.2e-16
+    ## Residual standard error: 0.3658 on 99 degrees of freedom
+    ## Multiple R-squared:  0.4753, Adjusted R-squared:   0.47 
+    ## F-statistic: 89.68 on 1 and 99 DF,  p-value: 1.568e-15
 
 ``` r
 coef(wrong)
 ```
 
     ## (Intercept)           x 
-    ##   0.5148515   0.0124869
+    ##  0.49504950  0.01182295
 
 Note these coefficients bear little resemblance ot the coefficients
 embedded in the plogis() function above.
@@ -704,20 +704,20 @@ summary(res)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -2.5623  -0.4583   0.1587   0.5163   1.8103  
+    ## -2.4663  -0.5689  -0.2172   0.5699   2.5523  
     ## 
     ## Coefficients:
     ##             Estimate Std. Error z value Pr(>|z|)    
-    ## (Intercept)  0.13299    0.29857   0.445    0.656    
-    ## x            0.08643    0.01595   5.419    6e-08 ***
+    ## (Intercept) -0.03878    0.27855  -0.139    0.889    
+    ## x            0.07393    0.01358   5.444 5.22e-08 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## (Dispersion parameter for binomial family taken to be 1)
     ## 
-    ##     Null deviance: 139.927  on 100  degrees of freedom
-    ## Residual deviance:  72.383  on  99  degrees of freedom
-    ## AIC: 76.383
+    ##     Null deviance: 140.006  on 100  degrees of freedom
+    ## Residual deviance:  81.651  on  99  degrees of freedom
+    ## AIC: 85.651
     ## 
     ## Number of Fisher Scoring iterations: 5
 
@@ -727,7 +727,7 @@ yLogit=predict(res)
 plot( yLogit ~ x )
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
 yhat=predict(res, type="response")
@@ -735,7 +735,7 @@ plot( y ~ x)
 lines(yhat~x)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-16-2.png)<!-- --> These plots
+![](README_files/figure-gfm/unnamed-chunk-16-2.png)<!-- --> These plots
 show that the slope of the logistic function is linear in the logit
 transformation (plot yLogit \~ x), and non-linear in real probability.
 The logit link function
@@ -904,13 +904,13 @@ elevPred = predict(elev, newdata=data.frame(Elevation2=elevBnp), type = "respons
 hist(elevPred)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 plot(elevBnp, elevPred, type="l", ylim = c(0,1.0), ylab= "Pr(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-20-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-2.png)<!-- -->
 
 But were there elevations from 0 - 1300m in Banff?
 
@@ -919,8 +919,8 @@ plot(wolfkde$Elevation2, wolfkde$used)
 lines(elevBnp, elevPred, type="l", ylab= "Pr(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-21-1.png)<!-- --> How do wolves
-respond to elevation? Can we make predictions about wolf use of
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- --> How do
+wolves respond to elevation? Can we make predictions about wolf use of
 elevations \< 1000 m based on our data in Banff? What would that be
 called?
 
@@ -1016,7 +1016,7 @@ summary(distHuman)
 hist(wolfkde$DistFromHumanAccess2)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ``` r
 disthumanBnp = 0:7000
@@ -1024,21 +1024,21 @@ disthumanPred = predict(distHuman, newdata=data.frame(DistFromHumanAccess2=disth
 hist(disthumanPred)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-22-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-2.png)<!-- -->
 
 ``` r
 plot(disthumanBnp, disthumanPred, type="l", ylab= "Pr(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-22-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-3.png)<!-- -->
 
 ``` r
 plot(wolfkde$DistFromHumanAccess2, wolfkde$used)
 lines(disthumanBnp, disthumanPred, type="l", ylab= "Pr(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-22-4.png)<!-- --> Similarly, how
-do wolves respond to high human activity?
+![](README_files/figure-gfm/unnamed-chunk-22-4.png)<!-- --> Similarly,
+how do wolves respond to high human activity?
 
 ``` r
 ## next human use
@@ -1075,7 +1075,7 @@ summary(distHHuman)
 hist(wolfkde$DistFromHighHumanAccess2)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ``` r
 disthumanBnp = 0:10000
@@ -1083,20 +1083,20 @@ disthumanPred = predict(distHHuman, newdata=data.frame(DistFromHighHumanAccess2=
 hist(disthumanPred)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-23-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-2.png)<!-- -->
 
 ``` r
 plot(disthumanBnp, disthumanPred, type="l", ylab= "Pr(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-23-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-3.png)<!-- -->
 
 ``` r
 plot(wolfkde$DistFromHumanAccess2, wolfkde$used)
 lines(disthumanBnp, disthumanPred, type="l", ylab= "Pr(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-23-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-4.png)<!-- -->
 
 Next for the ungulate H.S.I. models
 
@@ -1323,13 +1323,13 @@ head(wolfkde)
 hist(wolfkde$fitted.Elev)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 ``` r
 plot(wolfkde$fitted.Elev, wolfkde$Elevation2)
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-26-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-26-2.png)<!-- -->
 
 # Objective 6 - Improving Graphical Predictions using ggplot2
 
@@ -1338,93 +1338,70 @@ elevation model.
 
 ``` r
 # ggplot 2 explore basic histogram functio
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_histogram()
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_histogram()
 ```
-
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](lab3_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 ``` r
 # lets explore faceting
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ .)
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ .)
 ```
 
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-
-![](lab3_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->
 
 ``` r
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ ., scales = "free")
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_histogram(binwidth=0.05, fill="gray70", colour="black") + facet_grid(used ~ ., scales = "free")
 ```
 
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-
-![](lab3_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->
 
 ``` r
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev, fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16))
+ggplot(wolfkde, aes(x=fitted.Elev, fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16))
 ```
 
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-
-![](lab3_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->
 
 ``` r
 # lets redo this graph using faceting by pack
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev, y=..density.., fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) + facet_grid(pack ~ ., scales="free")
+ggplot(wolfkde, aes(x = fitted.Elev, y=after_stat(density), fill=usedFactor)) + geom_histogram(binwidth=0.05, position="identity", alpha=0.7) + xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) + facet_grid(pack ~ ., scales="free")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-27-5.png)<!-- --> This gives
+us a firm sense that things differ by pack, not only the \# of
+locations, but also the relatively lower predicted probability of use
+for the Red deer wolf pack compared to the Bow Valley wolf pack. Why is
+this? Remind ourselves of the structure of our model - it is a simple
+GLM of used \~ elevation, with no differences or accounting for
+differences between wolf packs. You can imagine an excercise would be to
+estimate the pack-specific univariate beta-coefficients between wolf
+packs for the same suite of covariates. What ecological questions would
+this address?
+
+``` r
+# Now lets explore fitting functions to the distributions
+ggplot(wolfkde, aes(x=fitted.Elev)) + geom_density()
+```
+
+![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+``` r
+ggplot(wolfkde, aes(x=fitted.Elev), fill=usedFactor) + geom_density(alpha=0.5) + xlim(0,1)+xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) 
+```
+
+![](README_files/figure-gfm/unnamed-chunk-28-2.png)<!-- -->
+
+``` r
+# kernel lines
+ggplot(wolfkde, aes(x=fitted.Elev, y=..density.., fill=usedFactor)) + geom_histogram(binwidth=0.05) + geom_density(alpha = 0.5) + facet_grid(pack ~ .)
 ```
 
     ## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
     ## ℹ Please use `after_stat(density)` instead.
-    ## Use of `wolfkde$fitted.Elev` is discouraged. ℹ Use `fitted.Elev` instead.
 
-![](lab3_files/figure-gfm/unnamed-chunk-27-5.png)<!-- --> This gives us
-a firm sense that things differ by pack, not only the \# of locations,
-but also the relatively lower predicted probability of use for the Red
-deer wolf pack compared to the Bow Valley wolf pack. Why is this? Remind
-ourselves of the structure of our model - it is a simple GLM of used \~
-elevation, with no differences or accounting for differences between
-wolf packs. You can imagine an excercise would be to estimate the
-pack-specific univariate beta-coefficients between wolf packs for the
-same suite of covariates. What ecological questions would this address?
-
-``` r
-# Now lets explore fitting functions to the distributions
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev)) + geom_density()
-```
-
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-
-![](lab3_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
-
-``` r
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev), fill=usedFactor) + geom_density(alpha=0.5) + xlim(0,1)+xlab("Predicted Probability of Wolf Use") + theme(axis.title.x=element_text(size=16)) 
-```
-
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-
-![](lab3_files/figure-gfm/unnamed-chunk-28-2.png)<!-- -->
-
-``` r
-# kernel lines
-ggplot(wolfkde, aes(x=wolfkde$fitted.Elev, y=..density.., fill=usedFactor)) + geom_histogram(binwidth=0.05) + geom_density(alpha = 0.5) + facet_grid(pack ~ .)
-```
-
-    ## Warning: Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-    ## Use of `wolfkde$fitted.Elev` is discouraged.
-    ## ℹ Use `fitted.Elev` instead.
-
-![](lab3_files/figure-gfm/unnamed-chunk-28-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-28-3.png)<!-- -->
 
 ## Plotting Logistic Regresson with ggplot2
 
@@ -1441,7 +1418,7 @@ ggplot(wolfkde, aes(x=Elevation2, y=used)) + geom_point() + stat_smooth(method="
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](lab3_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ## Distance from human access
 
@@ -1455,7 +1432,7 @@ ggplot(wolfkde, aes(x=DistFromHumanAccess2, y=used)) + geom_point() + stat_smoot
 
     ## Warning: Removed 42 rows containing missing values (`geom_point()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 ``` r
 ggplot(wolfkde, aes(x=elk_w2, y=used)) + geom_point() + stat_smooth(method="glm", method.args = list(family="binomial"))
@@ -1467,7 +1444,7 @@ ggplot(wolfkde, aes(x=elk_w2, y=used)) + geom_point() + stat_smooth(method="glm"
 
     ## Warning: Removed 249 rows containing missing values (`geom_point()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-30-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-30-2.png)<!-- -->
 
 But whats up with the dots? - lets jitter and see
 
@@ -1482,7 +1459,7 @@ ggplot(wolfkde, aes(x=elk_w2, y=used)) + geom_point() +geom_jitter(aes(colour = 
     ## Warning: Removed 249 rows containing missing values (`geom_point()`).
     ## Removed 249 rows containing missing values (`geom_point()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 What the jittering shows is the nice, clear separation between 0’s and
 1’s. MOST 1’s are \> 4 H.S.I. ranking scores, and similarly, most 0’s
@@ -1495,7 +1472,7 @@ ggplot(wolfkde, aes(x=Elevation2, y=used)) + geom_point() +geom_jitter(aes(colou
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](lab3_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 ## Splitting by wolf pack
 
@@ -1511,7 +1488,7 @@ ggplot(wolfkde, aes(x=Elevation2, y=used, colour=pack)) + geom_point() + geom_ji
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](lab3_files/figure-gfm/unnamed-chunk-33-1.png)<!-- --> This is the
+![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- --> This is the
 first analysis that shows us the two wolf packs respond very differently
 to elevation. I wonder if they respond differently to Moose, or Sheep,
 say?
@@ -1524,7 +1501,7 @@ ggplot(wolfkde, aes(x=moose_w2, y=used, colour=pack)) + stat_smooth(method="glm"
 
     ## Warning: Removed 249 rows containing non-finite values (`stat_smooth()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 ``` r
 ggplot(wolfkde, aes(x=sheep_w2, y=used, colour=pack)) + stat_smooth(method="glm", method.args = list(family="binomial"))
@@ -1534,10 +1511,10 @@ ggplot(wolfkde, aes(x=sheep_w2, y=used, colour=pack)) + stat_smooth(method="glm"
 
     ## Warning: Removed 249 rows containing non-finite values (`stat_smooth()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-34-2.png)<!-- --> This provides
-ample evidence that perhaps we should not be pooling over both wolf
-packs and paves the way for your homework this week. You can also facet
-by pack, and put each pack in its own panel.
+![](README_files/figure-gfm/unnamed-chunk-34-2.png)<!-- --> This
+provides ample evidence that perhaps we should not be pooling over both
+wolf packs and paves the way for your homework this week. You can also
+facet by pack, and put each pack in its own panel.
 
 ``` r
 # versus faceting by wolf pack
@@ -1546,7 +1523,7 @@ ggplot(wolfkde, aes(x=Elevation2, y=used)) + geom_point() + stat_smooth(method="
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](lab3_files/figure-gfm/unnamed-chunk-35-1.png)<!-- --> And finally,
+![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- --> And finally,
 this last plot again illustrates the futility of fitting a linear model
 (lm) to binary data compared against the predictions from the elev
 model.
@@ -1560,25 +1537,25 @@ ggplot(wolfkde, aes(x=Elevation2, y=fitted.Elev)) + geom_point() + stat_smooth(m
 
     ## Warning: Removed 38 rows containing missing values (`geom_smooth()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
 Lastly, I will illustrate our first use of the effects package which is
 especially nice later for quickly visualizing interactions. `?effect`.
 Learn more here <https://www.jstatsoft.org/article/view/v008i15>
 
 ``` r
-plot(effect("Elevation2", elev), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)") 
+plot(effects::effect("Elevation2", elev), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)") 
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
 Lets explore the effects() function more with other variables.
 
 ``` r
-plot(effect("deer_w2", deer), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)")
+plot(effects::effect("deer_w2", deer), grid=TRUE, rescale.axis = FALSE, ylab = "Probability(Used)")
 ```
 
-![](lab3_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 ## Saving Graphics
 
@@ -1652,7 +1629,7 @@ figPrey
 
     ## Warning: Removed 249 rows containing non-finite values (`stat_smooth()`).
 
-![](lab3_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
 ``` r
 ## lets save this
