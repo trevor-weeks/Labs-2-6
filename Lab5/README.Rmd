@@ -2,19 +2,12 @@
 title: 'WILD 562 Lab5 : Multiple Logisitic Regression & Model Selection'
 author: "Mark Hebblewhite"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-output:
-  html_document:
-    number_sections: yes
-    self_contained: yes
-    theme: simplex
-    toc: yes
-    toc_float: yes
+output:github_document
 ---
 
 ```{r setup, include=FALSE}
 require(knitr)
 knitr::opts_chunk$set(echo = TRUE)
-opts_knit$set(root.dir = "/Users/mark.hebblewhite/Box Sync/Teaching/UofMcourses/WILD562/Spring2021/Labs/lab5")
 r <- getOption("repos")
 r["CRAN"] <- "https://ftp.osuosl.org/pub/cran/"
 options(repos = r)
@@ -48,7 +41,7 @@ ipak(packages)
 
 ## 0.2 Preliminaries: importing data
 ```{r}
-wolfkde <- read.csv("Data/wolfkde.csv", header=TRUE, sep = ",", na.strings="NA", dec=".")
+wolfkde <- read.csv(here::here("Data","wolfkde5.csv"), header=TRUE, sep = ",", na.strings="NA", dec=".")
 head(wolfkde)
 table(wolfkde$pack, wolfkde$used)
 ```
@@ -393,7 +386,7 @@ corrgram(wolfkde[c(7, 18:29)], order=TRUE, lower.panel=panel.fill,
 So nothing too egregious except, unsurprisingly, Rock and Ice and Elevaiton. 
 
 Next, lets test for correlations between human access[8], and the landcover dummy variables. 
-```{r}
+```{r warning=FALSE}
 corrgram(wolfkde[c(8, 18:29)], order=TRUE, lower.panel=panel.cor,
          upper.panel=panel.pie, text.panel=panel.txt,
          main="Landcover Correlations with Distance from Human Access")
