@@ -1,10 +1,10 @@
 library(knitr)
 
 #Lab 2
-knitr::purl(input = "Lab2/README.Rmd", output = "Lab2/lab2.R", documentation = 1)
+knitr::purl(input = "Lab2/Lab2.Rmd", output = "Lab2/lab2.R", documentation = 1)
 
 #Lab3
-knitr::purl(input = "Lab3/README.Rmd", output = "Lab3/lab3.R", documentation = 1)
+knitr::purl(input = "Lab3/Lab3.Rmd", output = "Lab3/lab3.R", documentation = 1)
 
 #Lab4
 knitr::purl(input = "Lab4/README.Rmd", output = "Lab4/lab4.R", documentation = 1)
