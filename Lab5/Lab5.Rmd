@@ -2,7 +2,7 @@
 title: 'WILD 562 Lab5 : Multiple Logisitic Regression & Model Selection'
 author: "Mark Hebblewhite"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-output:github_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -926,7 +926,7 @@ p7<-p6+theme(axis.line.x = element_line(color="black", size = 0.25),
 
 p7
 
-tiff("coefPlot.tiff", res=600, compression = "lzw", height=5, width=7, units="in")
+tiff(here::here("Lab5","Output","coefPlot.tiff"), res=600, compression = "lzw", height=5, width=7, units="in")
 p7
 dev.off()
 ```
