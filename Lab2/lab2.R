@@ -1,8 +1,7 @@
 
 
 ## list needed packages
-packages <- c("ks", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "raster", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars", "dplyr")
-
+packages <- c("ks", "here", "plotrix", "lattice", "adehabitatHR", "maptools", "mapview", "ggplot2","colorRamps", "sf", "terra", "tmap", "stars", "dplyr")
 
 ## ----eval=TRUE, message=FALSE, results='hide'--------------------------------------------
 

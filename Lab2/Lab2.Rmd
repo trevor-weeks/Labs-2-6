@@ -250,7 +250,7 @@ How can we zoom into just one area of a raster object? There are many reasons we
 ```{r, warning = FALSE, eval = FALSE}
 library(mapview)
 mapview(wolfyht) + deer_w + sheep_w
-
+mapview(disthighhumaccess2)
 #Tmap method -- can be faster 
 tmap_mode("view")
 wolf_map <- tm_shape(wolfyht)+tm_dots()
@@ -258,7 +258,7 @@ deer_layer <- wolf_map + tm_shape(deer_w_stars)+tm_raster()
 deer_layer + tm_shape(sheep_w_stars)+tm_raster()
 ```
 
-## Part 1b - Distance to Raster (Human Access Layer)
+## Part 1c - Distance to Raster (Human Access Layer)
 
 First, there are many ways to evaluate human activity, polygonal (e.g., cities, parks), vector (roads, lines, points=houses), or more integrative spatial measures like density of human features or distance to human features.  Later in class we will compare and contrast why we would use distance to or density of a human feature as a resource covariate for wildlife. 
 
@@ -343,7 +343,7 @@ crs(rd) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +tow
 
 class(rd)
 # Fit 99% mpc
-#cp.rd <- mcp(rd, percent=99)
+cp.rd <- mcp(rd, percent=99)
 #note error that one animal does not have at least 5 locations
 table(rd.data$NAME)
 #42 60 69 70 81 82 84 
@@ -370,7 +370,7 @@ plot(rd, col="black", add=TRUE)
 #check area in square meters for each Red Deer wolf pack
 as.data.frame(cp.rd)
 
-#calculate area for different percents of MPC in square meters. 
+#calculate area for different percents of MCP in square meters. 
 mcp.area(rd, percent=seq(50, 100, by=5))
 ```
 
@@ -429,7 +429,7 @@ bv <- data.frame(as.character(bv.data$NAME))
 coordinates(bv) <- xy
 crs(bv) <-  "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
-# Fit 99% mpc
+# Fit 99% mcp
 cp.bow <- mcp(bv, percent=99)
 plot(bv, col="black")
 plot(cp.bow[cp.bow@data$id=="63",], col="blue",add=TRUE)
@@ -438,7 +438,7 @@ plot(cp.bow[cp.bow@data$id=="44",], col="green",add=TRUE)
 plot(bv, col="black", add=TRUE)
 ```
 
-## Red Deer wolves
+## Bow Valley wolves
 ```{r, warning= FALSE}
 #check area for each Red Deer wolf pack
 as.data.frame(cp.bow)
@@ -508,13 +508,13 @@ plot(wolfyht, col="black", add=TRUE)
 
 Checking areas, etc 
 ```{r, warnings = FALSE}
-#check area for each Red Deer wolf pack
+#check area for both wolf packs
 as.data.frame(cp.all)
 
 #calculate area for different percents of MPC
 mcp.area(all, percent=seq(50, 100, by=5))
 
-#calculate 99% KDE for both wolf packs
+#calculate 95% KDE for both wolf packs
 allUD <- kernelUD(all, grid=30, extent=0.5, same4all=TRUE) # reference grid
 image(allUD)
 ```
@@ -602,11 +602,20 @@ Note today we are using tidyverse, which depends on tidyr, but I've loaded it se
 ```{r}
 #with terra
 #first re-sampling so that extents match
-disthumanaccess2 <- resample(disthumanaccess2, deer_w)
-disthighhumanaccess <- resample(disthighhumanaccess, deer_w)
+disthumanaccess <- resample(disthumanaccess, mask.raster)
+disthighhumanaccess <- resample(disthighhumanaccess, mask.raster)
+
+crs(elevation2)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+crs(disthighhumanaccess)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+crs(disthumanaccess)<- "+proj=utm +zone=11 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+
+crs(disthumanaccess)<- crs(mask.raster)
 
 #stacking rasters
-all_rasters<-c(deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w,elevation2, disthumanaccess2, disthighhumanaccess)
+all_rasters<-c(deer_w, moose_w, elk_w, sheep_w, goat_w, wolf_w,elevation2, disthumanaccess, disthighhumanaccess)
+
+plot(all_rasters)
+
 
 #with stars
 #all_rasters_stars<-c(deer_w_stars, moose_w_stars, elk_w_stars, sheep_w_stars, goat_w_stars, wolf_w_stars,elevation2_stars, disthumanaccess2_stars, disthighhumanacess_stars)
@@ -733,7 +742,7 @@ bwplot(DistFromHumanAccess2 + DistFromHighHumanAccess2 + Elevation2~pack, auto.k
 ```{r}
 aggregate(Elevation2 ~ pack, data=wolfused, FUN=mean)
 aggregate(DistFromHumanAccess2 ~ pack, data=wolfused, FUN=mean)
-aggregate(.~pack, data=wolfused[c("pack", "DEER_W", "ELK_W", "MOOSE_W", "SHEEP_W", "GOAT_W")], mean)
+aggregate(.~pack, data=wolfused[c("DEER_W", "ELK_W", "MOOSE_W", "SHEEP_W", "GOAT_W")], mean)
 
 sapply(wolfused, median, na.rm=TRUE)
 ```
